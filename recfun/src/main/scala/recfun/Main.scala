@@ -1,5 +1,7 @@
 package recfun
 
+import scala.annotation.tailrec
+
 object Main {
   def main(args: Array[String]) {
     println("Pascal's Triangle")
@@ -19,7 +21,7 @@ object Main {
         case (_, 1) => 1
         case (0, _) => 1
         case _ if c == r => 1
-        case _ => pascal(c -1 ,r - 1) + pascal(c, r - 1)
+        case _ => pascal(c -1 ,r-1) + pascal(c, r-1)
       }
     }
   
@@ -28,6 +30,7 @@ object Main {
    */
     def balance(chars: List[Char]): Boolean = {
 
+      @tailrec
       def search(rest: List[Char], lookingForPartner: Boolean, matched: Boolean): Boolean = {
         rest match {
           case Nil =>
