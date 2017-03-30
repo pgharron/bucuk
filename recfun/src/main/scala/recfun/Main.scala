@@ -13,7 +13,15 @@ object Main {
   /**
    * Exercise 1
    */
-    def pascal(c: Int, r: Int): Int = ???
+    def pascal(c: Int, r: Int): Int = {
+      (c, r) match {
+        case (0, 0) => 1
+        case (_, 1) => 1
+        case (0, _) => 1
+        case _ if c == r => 1
+        case _ => pascal(c -1 ,r - 1) + pascal(c, r - 1)
+      }
+    }
   
   /**
    * Exercise 2
