@@ -26,7 +26,27 @@ object Main {
   /**
    * Exercise 2
    */
-    def balance(chars: List[Char]): Boolean = ???
+    def balance(chars: List[Char]): Boolean = {
+
+      def search(rest: List[Char], lookingForPartner: Boolean, matched: Boolean): Boolean = {
+        rest match {
+          case Nil =>
+            matched && !lookingForPartner
+
+          case h :: t if !lookingForPartner =>
+              search(t, h == '(', matched)
+
+          case h :: t =>
+            val m = h ==')'
+            search(t, if (m) false else true, m)
+        }
+      }
+
+      chars match {
+        case Nil => false
+        case _ => search(chars, false, false)
+      }
+    }
   
   /**
    * Exercise 3
