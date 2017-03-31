@@ -36,23 +36,31 @@ object Main {
           case Nil =>
             matched && !lookingForPartner
 
-          case h :: t if !lookingForPartner =>
-              search(t, h == '(', matched)
-
           case h :: t =>
-            val m = h ==')'
-            search(t, if (m) false else true, m)
+            if (!lookingForPartner)
+              search(t, h == '(', matched)
+            else {
+              val m = h ==')'
+              search(t, if (m) false else true, m)
+            }
         }
       }
 
-      chars match {
-        case Nil => false
-        case _ => search(chars, false, false)
-      }
+      if (chars.isEmpty)
+        false
+      else
+        search(chars, false, false)
     }
   
   /**
    * Exercise 3
    */
-    def countChange(money: Int, coins: List[Int]): Int = ???
+    def countChange(money: Int, coins: List[Int]): Int = {
+      if (money < 0 || coins.isEmpty)
+        0
+      else if (money == 0)
+        1
+      else
+        countChange(money - coins.head, coins) + countChange(money, coins.tail)
+    }
   }
