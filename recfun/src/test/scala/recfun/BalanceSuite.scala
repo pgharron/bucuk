@@ -22,6 +22,18 @@ class BalanceSuite extends FunSuite {
     assert(!balance(":-)".toList))
   }
 
+//  test("balance: '((())))' is unbalanced") {
+//    assert(!balance("((())))".toList))
+//  }
+
+  test("balance: 'none' is unbalanced") {
+    assert(!balance("none".toList))
+  }
+
+  test("balance: '' is unbalanced") {
+    assert(!balance("".toList))
+  }
+
   test("balance: counting is not enough") {
     assert(!balance("())(".toList))
   }
