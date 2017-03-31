@@ -37,13 +37,12 @@ object Main {
         rest match {
           case Nil =>
             matched && !lookingForPartner
-
           case h :: t =>
             if (!lookingForPartner)
               search(t, h == '(', matched)
             else {
               val m = h ==')'
-              search(t, if (m) false else true, m)
+              search(t, !m, m)
             }
         }
       }
