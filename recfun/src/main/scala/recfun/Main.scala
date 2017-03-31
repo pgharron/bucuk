@@ -31,7 +31,9 @@ object Main {
     def balance(chars: List[Char]): Boolean = {
 
       @tailrec
-      def search(rest: List[Char], lookingForPartner: Boolean, matched: Boolean): Boolean = {
+      def search(rest: List[Char],
+                 lookingForPartner: Boolean = false,
+                 matched: Boolean = false): Boolean = {
         rest match {
           case Nil =>
             matched && !lookingForPartner
@@ -49,7 +51,7 @@ object Main {
       if (chars.isEmpty)
         false
       else
-        search(chars, false, false)
+        search(chars)
     }
   
   /**
@@ -61,6 +63,7 @@ object Main {
       else if (money == 0)
         1
       else
-        countChange(money - coins.head, coins) + countChange(money, coins.tail)
+        countChange(money - coins.head, coins) +
+          countChange(money, coins.tail)
     }
   }
