@@ -139,6 +139,13 @@ class FunSetSuite extends FunSuite {
     }
   }
 
+  test("exists given {1,2,3,4}") {
+    new TestSets {
+      val s = union(union(s1, s2), union(s3, s4))
+      assert(exists(s, x => x == 2), "Should contain 2")
+    }
+  }
+
   test("for all") {
     new TestSets {
       val s = singletonSet(1)
