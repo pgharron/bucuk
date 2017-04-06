@@ -136,17 +136,19 @@ class FunSetSuite extends FunSuite {
 
   test("filter with predicate") {
     new TestSets {
-      val s = filter(s2, x => x > 1)
+      val s = filter(s2, _ > 1)
       //      printSet(s)
       assert(!contains(s, 1), "filter 1")
       assert(contains(s, 2), "filter 2")
+      assert(!contains(filter(s2, _ < 0), 2), "! filter 2")
     }
   }
 
-  test("exists given {1,2,3,4}") {
+  test("exists given {1,2,3,4} should contain 2") {
     new TestSets {
       val s = union(union(s1, s2), union(s3, s4))
       assert(exists(s, x => x == 2), "Should contain 2")
+      assert(!exists(s, _ > 5), "> 5 not exists")
     }
   }
 
