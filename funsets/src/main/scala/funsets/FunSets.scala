@@ -26,7 +26,7 @@ object FunSets {
    * the sets of all elements that are in either `s` or `t`.
    */
     def union(s: Set, t: Set): Set = { x: Int =>
-      contains(s, x) || contains(t, x)
+      s(x) || t(x)
     }
 
   /**
@@ -34,7 +34,7 @@ object FunSets {
    * the set of all elements that are both in `s` and `t`.
    */
     def intersect(s: Set, t: Set): Set = { i: Int =>
-      contains(s, i) && contains(t, i)
+      s(i) && t(i)
     }
 
   /**
@@ -49,7 +49,7 @@ object FunSets {
    * Returns the subset of `s` for which `p` holds.
    */
     def filter(s: Set, p: Int => Boolean): Set = { i: Int =>
-      contains(s, i) && p(i)
+      s(i) && p(i)
     }
 
 
@@ -61,14 +61,13 @@ object FunSets {
   /**
    * Returns whether all bounded integers within `s` satisfy `p`.
    */
-    def forall(s: Set, p: Int => Boolean): Boolean = {
+  def forall(s: Set, p: Int => Boolean): Boolean = {
     def iter(a: Int): Boolean = {
-      if (a >= 0 && a <= 1000 && contains(s, a)) p(a)
-      else if (a >= -1000 && a <= 0 && contains(s, a)) p(a)
-      else iter(a + 1)
+      if (a > bound) true
+      else if (s(a) && !p(a)) false
+      else iter(a+1)
     }
-
-    iter(-1000)
+    iter(-bound)
   }
 
   /**

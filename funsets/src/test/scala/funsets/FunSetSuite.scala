@@ -74,10 +74,14 @@ class FunSetSuite extends FunSuite {
     */
 
   trait TestSets {
+
     val s1 = singletonSet(1)
     val s2 = singletonSet(2)
     val s3 = singletonSet(3)
     val s4 = singletonSet(4)
+    val s5 = singletonSet(5)
+    val s7 = singletonSet(7)
+    val s1000 = singletonSet(1000)
   }
 
   /**
@@ -150,6 +154,13 @@ class FunSetSuite extends FunSuite {
     new TestSets {
       val s = singletonSet(1)
       assert(forall(s, x => x >= -1000))
+    }
+  }
+
+  test("for all {1,3,4,5,7,1000}") {
+    new TestSets {
+      val s = union(union(union(s1, s3), union(s4, s5)), union(s7, s1000))
+      assert(!forall(s, x => x < 5))
     }
   }
 
