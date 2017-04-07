@@ -140,7 +140,7 @@ class FunSetSuite extends FunSuite {
       //      printSet(s)
       assert(!contains(s, 1), "filter 1")
       assert(contains(s, 2), "filter 2")
-      assert(!contains(filter(s2, _ < 0), 2), "! filter 2")
+      assert(contains(filter(s2, _ == 2), 2), "! filter 2")
     }
   }
 
