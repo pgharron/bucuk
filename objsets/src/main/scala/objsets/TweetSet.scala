@@ -109,6 +109,10 @@ abstract class TweetSet {
 class Empty extends TweetSet {
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = acc
 
+  override def union(that: TweetSet): TweetSet = {
+    that
+  }
+
   /**
     * The following methods are already implemented
     */
@@ -129,6 +133,10 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
       new NonEmpty(elem, left filterAcc(p, acc), right filterAcc(p, acc))
     else
       acc
+  }
+
+  override def union(that: TweetSet): TweetSet = {
+    ((left union right) union that) incl elem
   }
 
   /**
