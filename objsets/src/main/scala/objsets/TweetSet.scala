@@ -135,27 +135,39 @@ class Empty extends TweetSet {
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
-    if (p(elem))
-      new NonEmpty(elem, left filterAcc(p, acc), right filterAcc(p, acc))
-    else
-      acc
+    if( p(elem) ) left.filterAcc(p, right.filterAcc(p, acc.incl(elem)))
+    else left.filterAcc(p, right.filterAcc(p, acc))
   }
 
   override def union(that: TweetSet): TweetSet = {
-//    ((left union right) union that) incl elem
-    left.union(right).union(that).incl(elem)
+    (left union (right union that)).incl(elem)
   }
 
   override def mostRetweeted: Tweet = {
-    val leftMax = if (left.isEmpty) 0 else left.mostRetweeted.retweets
-    val rightMax = if (right.isEmpty) 0 else right.mostRetweeted.retweets
+//    val leftMax = if (left.isEmpty) 0 else left.mostRetweeted.retweets
+//    val rightMax = if (right.isEmpty) 0 else right.mostRetweeted.retweets
+//
+//    if (rightMax > leftMax && rightMax > elem.retweets) right.mostRetweeted
+//    else if (leftMax > rightMax && leftMax > elem.retweets) left.mostRetweeted
+//    else elem
 
-    if (rightMax > leftMax && rightMax > elem.retweets) right.mostRetweeted
-    else if (leftMax > rightMax && leftMax > elem.retweets) left.mostRetweeted
-    else elem
+    lazy val leftMost = left.mostRetweeted
+    lazy val rightMost = right.mostRetweeted
+
+    if( !left.isEmpty && leftMost.retweets > elem.retweets )
+      if( !right.isEmpty && rightMost.retweets > leftMost.retweets )
+        rightMost
+      else
+        leftMost
+    else if( !right.isEmpty && rightMost.retweets > elem.retweets )
+      rightMost
+    else
+      elem
+
   }
 
   override def descendingByRetweet: TweetList = {
+//    new Cons(mostRetweeted, remove(mostRetweeted).descendingByRetweet)
     def searchAll(accList: TweetList, s: TweetSet): TweetList = {
       if (s.isEmpty) {
         accList
@@ -246,6 +258,5 @@ object GoogleVsApple {
 
 object Main extends App {
   // Print the trending tweets
-  println(">>>>>>>>>")
   GoogleVsApple.trending foreach println
 }
