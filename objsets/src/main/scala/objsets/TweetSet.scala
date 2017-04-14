@@ -168,23 +168,23 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
   }
 
   override def descendingByRetweet: TweetList = {
-//    new Cons(mostRetweeted, remove(mostRetweeted).descendingByRetweet)
-    def searchAll(accList: TweetList, s: TweetSet): TweetList = {
-      if (s.isEmpty) {
-        accList
-      } else {
-        val tweet = s.mostRetweeted
-        val ts = s.remove(tweet)
-
-        if (accList.isEmpty) {
-          searchAll(new Cons(tweet, accList), ts)
-        } else {
-          searchAll(new Cons(accList.head, new Cons(tweet, accList.tail)), ts)
-        }
-      }
-    }
-
-    searchAll(Nil, this)
+    new Cons(mostRetweeted, remove(mostRetweeted).descendingByRetweet)
+//    def searchAll(accList: TweetList, s: TweetSet): TweetList = {
+//      if (s.isEmpty) {
+//        accList
+//      } else {
+//        val tweet = s.mostRetweeted
+//        val ts = s.remove(tweet)
+//
+//        if (accList.isEmpty) {
+//          searchAll(new Cons(tweet, accList), ts)
+//        } else {
+//          searchAll(new Cons(accList.head, new Cons(tweet, accList.tail)), ts)
+//        }
+//      }
+//    }
+//
+//    searchAll(Nil, this)
   }
 
   /**
