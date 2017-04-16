@@ -24,33 +24,29 @@ object Main {
         case _ => pascal(c -1 ,r-1) + pascal(c, r-1)
       }
     }
-  
-  /**
-   * Exercise 2
-   */
+
+    /**
+    * Exercise 2
+    **/ 
     def balance(chars: List[Char]): Boolean = {
+       
+	def doIt(rest: List[Char], on: Boolean, k: Int): Boolean = {
+ 
+		if (rest.isEmpty) 
+		  !on && k == 0		
+		else {
+			val h = rest.head 
+			val (o, t) = if (h == '(' && !on) (true, k+1)
+				else if (h == '(') (true, k+1)
+				else if (h == ')' && on) (k-1 > 0, k-1)
+                                else if (h == ')') (true, k+1)
+				else (on, k)
 
-      @tailrec
-      def search(rest: List[Char],
-                 lookingForPartner: Boolean = false,
-                 matched: Boolean = false): Boolean = {
-        rest match {
-          case Nil =>
-            matched && !lookingForPartner
-          case h :: t =>
-            if (!lookingForPartner)
-              search(t, h == '(', matched)
-            else {
-              val m = h ==')'
-              search(t, !m, m)
-            }
+			doIt(rest.tail, o, t)  	
+		}
         }
-      }
 
-      if (chars.isEmpty)
-        false
-      else
-        search(chars)
+	doIt(chars, chars.isEmpty, 0) 
     }
   
   /**
