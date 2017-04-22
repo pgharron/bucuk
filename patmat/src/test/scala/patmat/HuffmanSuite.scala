@@ -78,16 +78,20 @@ class HuffmanSuite extends FunSuite {
 
     test("createCodeTree") {
       new TestTrees {
-        val chars = "aaaaaaaaaaeeeeeeeeeeeeeeeiiiiiiiiiiiisssttttpppppppppppppn".toList
+        val chars = "aaaaaaaaaaeeeeeeeeeeeeeeeiiiiiiiiiiiissstttt             \n".toList
         val tim = times(chars)
         val oll = makeOrderedLeafList(tim)
+        println("oll " + oll)
         val codeTree = createCodeTree(chars)
+        println("codeTree " + codeTree)
   //      assert(createCodeTree("aaaaaaaaaaeeeeeeeeeeeeeeeiiiiiiiiiiiissstttt             \n".toList) != null)
 
         val encodedBits = encode(codeTree)(chars)
+        println("encodedBits " + encodedBits)
         val decoded: List[Char] = decode(codeTree, encodedBits)
         assert(decoded === chars)
         assert(encodedBits == quickEncode(codeTree)(chars))
+//        assert(encodedBits.size === 146)
       }
 }
 

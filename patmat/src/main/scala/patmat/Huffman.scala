@@ -185,7 +185,6 @@ object Huffman {
           }
         case l: Leaf =>
           inDecode(tree, b, acc ::: List(l.char))
-//          if (b.isEmpty) acc ::: List(l.char) else inDecode(tree, b, acc ::: List(l.char))
       }
     }
 
@@ -230,15 +229,8 @@ object Huffman {
       }
     }
 
-    var m = Map[Char, List[Bit]]().empty
     text flatMap { c =>
-      if (!m.contains(c)) {
-        val l = listForChar(c, tree, List())
-        m += c -> l
-      } else {
-//        println(s"got it...$c")
-      }
-      m(c)
+      listForChar(c, tree, List())
     }
   }
 
@@ -276,7 +268,7 @@ object Huffman {
         case l: Leaf =>
           List((l.char, acc))
         case f: Fork =>
-          mergeCodeTables(v(f.left, acc ::: List(0)), v(f.right, acc ::: List(1)))
+          mergeCodeTables(v(f.left, acc :+ 0), v(f.right, acc :+ 1))
       }
     }
 
