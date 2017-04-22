@@ -80,24 +80,14 @@ class HuffmanSuite extends FunSuite {
       new TestTrees {
         val chars = "aaaaaaaaaaeeeeeeeeeeeeeeeiiiiiiiiiiiisssttttpppppppppppppn".toList
         val tim = times(chars)
-        println("times = " + tim)
         val oll = makeOrderedLeafList(tim)
-        println("oll = " + oll)
-
-
-        val c = createCodeTree(chars)
-        println(s" c = $c")
+        val codeTree = createCodeTree(chars)
   //      assert(createCodeTree("aaaaaaaaaaeeeeeeeeeeeeeeeiiiiiiiiiiiissstttt             \n".toList) != null)
 
-        val bits = encode(c)(chars)
-        println("bits = " + bits.size)
-        println("bits = " + bits)
-//        assert(bits == quickEncode(c)(chars))
-
-        val t = decode(c, bits)
-  //      assert(t === chars)
-
-
+        val encodedBits = encode(codeTree)(chars)
+        val decoded: List[Char] = decode(codeTree, encodedBits)
+        assert(decoded === chars)
+        assert(encodedBits == quickEncode(codeTree)(chars))
       }
 }
 
@@ -105,27 +95,13 @@ class HuffmanSuite extends FunSuite {
     new TestTrees {
       val chars = "aaaeeeiiiiii".toList
       val tim = times(chars)
-      println("times = " + tim)
       val oll = makeOrderedLeafList(tim)
-      println("oll = " + oll)
+      val codeTree = createCodeTree(chars)
 
-      val c = createCodeTree(chars)
-      println(s" c = $c")
-
-      val bits = encode(c)(chars)
-      println("bits = " + bits)
-      println("bits = " + bits.size)
-      val t = decode(c, bits)
-
-
-//      assert(createCodeTree("aaaaaaaaaaeeeeeeeeeeeeeeeiiiiiiiiiiiissstttt             \n".toList) != null)
-
-//      val bits = encode(c)(chars)
-//      println("bits = " + bits.size)
-//      println("bits = " + bits)
-//      assert(bits == quickEncode(c)(chars))
-//
-//      assert(t === chars)
+      val encodedBits = encode(codeTree)(chars)
+      val decoded: List[Char] = decode(codeTree, encodedBits)
+      assert(decoded === chars)
+      assert(encodedBits == quickEncode(codeTree)(chars))
     }
   }
 

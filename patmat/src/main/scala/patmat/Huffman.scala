@@ -251,13 +251,12 @@ object Huffman {
     * the code table `table`.
     */
   def codeBits(table: CodeTable)(char: Char): List[Bit] = {
-    table.map { l =>
+    table.flatMap { l =>
       l match {
-        case (c: Char, List(bs)) if c == char =>
-          println("???? " + c)
+        case (c: Char, bs:List[Bit]) if c == char =>
           bs
-        case u =>
-          throw new Error(s"No Bits for $char / $u")
+        case _ =>
+          List[Int]()
       }
     }
   }
@@ -301,7 +300,6 @@ object Huffman {
     */
   def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = {
     val ct = convert(tree)
-    println("CT = " + ct)
     text flatMap { c =>
       codeBits(ct)(c)
     }
