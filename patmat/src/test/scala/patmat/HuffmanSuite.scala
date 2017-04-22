@@ -9,10 +9,12 @@ import patmat.Huffman._
 
 @RunWith(classOf[JUnitRunner])
 class HuffmanSuite extends FunSuite {
-	trait TestTrees {
-		val t1 = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
-		val t2 = Fork(Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5), Leaf('d',4), List('a','b','d'), 9)
-	}
+
+  trait TestTrees {
+    val t1 = Fork(Leaf('a', 2), Leaf('b', 3), List('a', 'b'), 5)
+    val t2 = Fork(Fork(Leaf('a', 2), Leaf('b', 3), List('a', 'b'), 5), Leaf('d', 4), List('a', 'b', 'd'), 9)
+
+  }
 
 
   test("weight of a larger tree") {
@@ -24,7 +26,7 @@ class HuffmanSuite extends FunSuite {
 
   test("chars of a larger tree") {
     new TestTrees {
-      assert(chars(t2) === List('a','b','d'))
+      assert(chars(t2) === List('a', 'b', 'd'))
     }
   }
 
@@ -35,13 +37,19 @@ class HuffmanSuite extends FunSuite {
 
 
   test("makeOrderedLeafList for some frequency table") {
-    assert(makeOrderedLeafList(List(('t', 2), ('e', 1), ('x', 3))) === List(Leaf('e',1), Leaf('t',2), Leaf('x',3)))
+    assert(makeOrderedLeafList(List(('t', 2), ('e', 1), ('x', 3))) === List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 3)))
   }
 
 
   test("combine of some leaf list") {
     val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
-    assert(combine(leaflist) === List(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4)))
+    assert(combine(leaflist) === List(Fork(Leaf('e', 1), Leaf('t', 2), List('e', 't'), 3), Leaf('x', 4)))
+  }
+
+  test("singleton") {
+    new TestTrees {
+      assert(singleton(List(t1)) === true)
+    }
   }
 
   test("decodedSecret") {
@@ -65,6 +73,59 @@ class HuffmanSuite extends FunSuite {
   test("convert") {
     new TestTrees {
       assert(convert(t1) === List(('a', List(0)), ('b', List(1))))
+    }
+  }
+
+    test("createCodeTree") {
+      new TestTrees {
+        val chars = "aaaaaaaaaaeeeeeeeeeeeeeeeiiiiiiiiiiiisssttttpppppppppppppn".toList
+        val tim = times(chars)
+        println("times = " + tim)
+        val oll = makeOrderedLeafList(tim)
+        println("oll = " + oll)
+
+
+        val c = createCodeTree(chars)
+        println(s" c = $c")
+  //      assert(createCodeTree("aaaaaaaaaaeeeeeeeeeeeeeeeiiiiiiiiiiiissstttt             \n".toList) != null)
+
+        val bits = encode(c)(chars)
+        println("bits = " + bits.size)
+        println("bits = " + bits)
+//        assert(bits == quickEncode(c)(chars))
+
+        val t = decode(c, bits)
+  //      assert(t === chars)
+
+
+      }
+}
+
+  test("createCodeTree small") {
+    new TestTrees {
+      val chars = "aaaeeeiiiiii".toList
+      val tim = times(chars)
+      println("times = " + tim)
+      val oll = makeOrderedLeafList(tim)
+      println("oll = " + oll)
+
+      val c = createCodeTree(chars)
+      println(s" c = $c")
+
+      val bits = encode(c)(chars)
+      println("bits = " + bits)
+      println("bits = " + bits.size)
+      val t = decode(c, bits)
+
+
+//      assert(createCodeTree("aaaaaaaaaaeeeeeeeeeeeeeeeiiiiiiiiiiiissstttt             \n".toList) != null)
+
+//      val bits = encode(c)(chars)
+//      println("bits = " + bits.size)
+//      println("bits = " + bits)
+//      assert(bits == quickEncode(c)(chars))
+//
+//      assert(t === chars)
     }
   }
 

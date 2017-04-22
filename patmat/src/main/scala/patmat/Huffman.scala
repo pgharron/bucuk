@@ -185,6 +185,7 @@ object Huffman {
           }
         case l: Leaf =>
           inDecode(tree, b, acc ::: List(l.char))
+//          if (b.isEmpty) acc ::: List(l.char) else inDecode(tree, b, acc ::: List(l.char))
       }
     }
 
@@ -218,22 +219,27 @@ object Huffman {
     */
   def encode(tree: CodeTree)(text: List[Char]): List[Bit] = {
 
-    def helper(tr: CodeTree, chars: List[Char], acc: List[Bit]): List[Bit] = {
-      chars match {
-        case h :: t => tr match {
-          case l: Leaf if h == l.char =>
-            helper(tree, t, acc)
-          case _: Leaf =>
-            helper(tr, t, acc)
-          case f: Fork =>
-            helper(f.left, t, acc ::: List(0)) ::: helper(f.right, t, acc ::: List(1))
-        }
-        case Nil =>
+    def listForChar(c: Char, tree: CodeTree, acc: List[Bit]): List[Bit] = {
+      tree match {
+        case l: Leaf if l.char == c =>
           acc
+        case _: Leaf =>
+          Nil
+        case f: Fork =>
+          listForChar(c, f.left, acc :+ 0) ::: listForChar(c, f.right, acc :+ 1)
       }
     }
 
-    helper(tree, text, List())
+    var m = Map[Char, List[Bit]]().empty
+    text flatMap { c =>
+      if (!m.contains(c)) {
+        val l = listForChar(c, tree, List())
+        m += c -> l
+      } else {
+//        println(s"got it...$c")
+      }
+      m(c)
+    }
   }
 
   // Part 4b: Encoding using code table
@@ -245,11 +251,13 @@ object Huffman {
     * the code table `table`.
     */
   def codeBits(table: CodeTable)(char: Char): List[Bit] = {
-    table.flatMap { l => l match {
-        case (c, bs) if c == char =>
+    table.map { l =>
+      l match {
+        case (c: Char, List(bs)) if c == char =>
+          println("???? " + c)
           bs
-        case _ =>
-          throw new Error(s"No Bits for $char")
+        case u =>
+          throw new Error(s"No Bits for $char / $u")
       }
     }
   }
@@ -293,6 +301,7 @@ object Huffman {
     */
   def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = {
     val ct = convert(tree)
+    println("CT = " + ct)
     text flatMap { c =>
       codeBits(ct)(c)
     }
