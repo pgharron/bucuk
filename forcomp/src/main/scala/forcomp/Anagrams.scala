@@ -104,6 +104,38 @@ object Anagrams {
       go(occurrences)
     }
 //
+//    val l = List(('a', 2), ('b', 2))                //> l  : List[(Char, Int)] = List((a,2), (b,2))
+//
+//    val y = {
+//      for {
+//        (c, i) <- l
+//        j <- (i to 1 by -1)
+//      } yield {
+//        (c, j)                                      //> y  : List[(Char, Int)] = List((a,2), (a,1), (b,2), (b,1))
+//      }
+//    }
+//
+//    println(s"Y = $y, size = ${y.size}")            //> Y = List((a,2), (a,1), (b,2), (b,1)), size = 4
+//
+//
+//    val j = for {
+//      c     <- 1 to y.size
+//      pair  <- y take c
+//      group <- for {
+//        n <- (y drop c)
+//        if (pair._1 < n._1)
+//      } yield {
+//        List(pair, n)
+//      }
+//    } yield group                                  //> j  : scala.collection.immutable.IndexedSeq[List[(Char, Int)]] = Vector(List(
+//    //| (a,2), (b,2)), List((a,2), (b,1)), List((a,2), (b,2)), List((a,2), (b,1)), L
+//    //| ist((a,1), (b,2)), List((a,1), (b,1)), List((a,2), (b,1)), List((a,1), (b,1)
+//    //| ))
+//
+//    val ii = j.toSet.toList
+
+
+    //
 //       for {
 //         (c, i) <- occurrences
 //         rest <- combinations(occurrences.drop(occurrences.indexOf((c, i) )))
