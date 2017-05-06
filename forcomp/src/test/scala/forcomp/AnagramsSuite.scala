@@ -14,6 +14,10 @@ class AnagramsSuite extends FunSuite  {
     assert(wordOccurrences("abcd") === List(('a', 1), ('b', 1), ('c', 1), ('d', 1)))
   }
 
+  test("wordOccurrences: null") {
+    assert(wordOccurrences("null") === List(('l', 2), ('n', 1), ('u', 1)))
+  }
+
   test("wordOccurrences: Modula-2") {
     assert(wordOccurrences("Modula-2") === List(('a', 1), ('d', 1), ('l', 1), ('m', 1), ('o', 1), ('u', 1)))
   }
@@ -77,6 +81,18 @@ class AnagramsSuite extends FunSuite  {
     assert(sentenceAnagrams(sentence) === List(Nil))
   }
 
+  test("sentence anagrams: beat") {
+    val sentence = List("Beat")
+    val anas = List(
+      List("beta"),
+      List("abet"),
+      List("be", "at"),
+      List("at", "be"),
+      List("beat")
+    )
+    assert(sentenceAnagrams(sentence).toSet === anas.toSet)
+  }
+
   test("sentence anagrams: Linux rulez") {
     val sentence = List("Linux", "rulez")
     val anas = List(
@@ -101,6 +117,7 @@ class AnagramsSuite extends FunSuite  {
       List("rulez", "Linux"),
       List("Linux", "rulez")
     )
+
     assert(sentenceAnagrams(sentence).toSet === anas.toSet)
   }
 

@@ -16,3 +16,5 @@ k.foldLeft(m){(m, p) =>
   } else m
 }
 
+val ff = List(List(('y',1)), List(('v',1)), List(('u',1)))
+ff drop 2

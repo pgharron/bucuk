@@ -40,7 +40,7 @@ object Anagrams {
 
   /** Converts a sentence into its character occurrence list. */
   def sentenceOccurrences(s: Sentence): Occurrences = {
-    wordOccurrences(s.flatMap(g => g).mkString)
+    wordOccurrences(s.flatten.mkString)
   }
 
   /** The `dictionaryByOccurrences` is a `Map` from different occurrences to a sequence of all
@@ -90,31 +90,21 @@ object Anagrams {
     * in the example above could have been displayed in some other order.
     */
   def combinations(occurrences: Occurrences): List[Occurrences] = {
+    val g = occurrences
     if (occurrences.isEmpty) List(Nil)
     else {
-      val y = {
+      List() :: {
         for {
-          (c, i) <- occurrences
-          j <- i to 1 by -1
+          o <- 1 to g.size
+          (c, i) <- g take o
+          pfreq <- for {
+            j <- i to 1 by -1
+          } yield (c, j)
+          tail <- combinations(g drop o)
         } yield {
-          (c, j)
+          pfreq :: tail
         }
-      }.sorted
-
-      val g: List[Occurrences] = List() :: {
-        for {
-          c <- 1 to y.size
-          pair <- y take c
-          group <- for {
-            n <- y drop c
-            if pair._1 < n._1
-          } yield {
-            List(pair, n)
-          }
-        } yield group
       }.toSet.toList
-
-      y.foldLeft(g)((a: List[Occurrences], n) => List(n) :: a)
     }
   }
 
@@ -129,17 +119,21 @@ object Anagrams {
     * and has no zero-entries.
     */
   def subtract(x: Occurrences, y: Occurrences): Occurrences = {
-    val m = x.toMap
-    y.foldLeft(m){(m, p) =>
-      val (c, i) = p
-      if (m.contains(c)) {
-        val v = m.apply(c)
-        val g = if (v - i <= 0) {
-          m - c
-        } else m.updated(c, v - i)
-        g
-      } else m
-    }.toList
+    val occMap = x.toMap
+
+    val remaining = y.foldLeft(occMap) { (acc, occ) =>
+      val (c, i) = occ
+      if (acc.contains(c)) {
+        val v = acc(c)
+        if (v - i <= 0) {
+          acc - c
+        } else acc.updated(c, v - i)
+      } else {
+        acc
+      }
+    }.toList.sorted
+
+    remaining
   }
 
   /** Returns a list of all anagram sentences of the given sentence.
@@ -183,6 +177,16 @@ object Anagrams {
     * Note: There is only one anagram of an empty sentence.
     */
   def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
-    if (sentence.isEmpty) List(Nil) else List()
+
+      def derive(occ: Occurrences): List[Sentence] = {
+        if (occ.isEmpty) List(List())
+        else
+          for {
+            x <- combinations(occ) filter dictionaryByOccurrences.contains
+            y <- dictionaryByOccurrences(x)
+            z <- derive(subtract(occ, x))
+          } yield y :: z
+      }
+      derive(sentenceOccurrences(sentence))
   }
 }
