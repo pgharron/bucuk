@@ -89,22 +89,27 @@ object Anagrams {
     * Note that the order of the occurrence list subsets does not matter -- the subsets
     * in the example above could have been displayed in some other order.
     */
+  //  val g = occurrences
+  //  if (occurrences.isEmpty) List(Nil)
+  //  else {
+  //    List() :: {
+  //      for {
+  //        o <- 1 to g.size
+  //        (c, i) <- g take o
+  //        pfreq <- for {
+  //          j <- i to 1 by -1
+  //        } yield (c, j)
+  //        tail <- combinations(g drop o)
+  //      } yield {
+  //        pfreq :: tail
+  //      }
+  //    }.toSet.toList
+
+
   def combinations(occurrences: Occurrences): List[Occurrences] = {
-    val g = occurrences
-    if (occurrences.isEmpty) List(Nil)
-    else {
-      List() :: {
-        for {
-          o <- 1 to g.size
-          (c, i) <- g take o
-          pfreq <- for {
-            j <- i to 1 by -1
-          } yield (c, j)
-          tail <- combinations(g drop o)
-        } yield {
-          pfreq :: tail
-        }
-      }.toSet.toList
+    (occurrences foldRight List[Occurrences](Nil)) { case ((ch, tm), acc) => {
+      acc ++ (for {comb <- acc; n <- 1 to tm} yield (ch, n) :: comb)
+    }
     }
   }
 
@@ -127,7 +132,8 @@ object Anagrams {
         val v = acc(c)
         if (v - i <= 0) {
           acc - c
-        } else acc.updated(c, v - i)
+        } else
+          acc.updated(c, v - i)
       } else {
         acc
       }
@@ -177,17 +183,17 @@ object Anagrams {
     * Note: There is only one anagram of an empty sentence.
     */
   def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
-      def derive(occ: Occurrences): List[Sentence] = {
-        if (occ.isEmpty) List(List())
-        else
-          for {
-            x <- combinations(occ)
-            if dictionaryByOccurrences.contains(x)
-            y <- dictionaryByOccurrences(x)
-            z <- derive(subtract(occ, x))
-          } yield y :: z
-      }
+    def derive(occ: Occurrences): List[Sentence] = {
+      if (occ.isEmpty) List(List())
+      else
+        for {
+          x <- combinations(occ)
+          if dictionaryByOccurrences.contains(x)
+          y <- dictionaryByOccurrences(x)
+          z <- derive(subtract(occ, x))
+        } yield y :: z
+    }
 
-      derive(sentenceOccurrences(sentence))
+    derive(sentenceOccurrences(sentence))
   }
 }
