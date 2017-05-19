@@ -87,23 +87,17 @@ class BloxorzSuite extends FunSuite {
 
   test("newNeighboursOnly with History level 1") {
     new Level1 {
-      val x = Set(
+
+      val neighbours = Set(
         (Block(Pos(1, 2), Pos(1, 3)), List(Right, Left, Up)),
         (Block(Pos(2, 1), Pos(3, 1)), List(Down, Left, Up))
       ).toStream
 
-      assert(
-        newNeighborsOnly(
-          Set(
-            (Block(Pos(1, 2), Pos(1, 3)), List(Right, Left, Up)),
-            (Block(Pos(2, 1), Pos(3, 1)), List(Down, Left, Up))
-          ).toStream,
+      val explored = Set(Block(Pos(1, 2), Pos(1, 3)), Block(Pos(1, 1), Pos(1, 1)))
 
-          Set(Block(Pos(1, 2), Pos(1, 3)), Block(Pos(1, 1), Pos(1, 1)))
-        ) == Set(
-          (Block(Pos(2, 1), Pos(3, 1)), List(Down, Left, Up))
-        ).toStream)
-
+      assert(newNeighborsOnly(neighbours, explored)  == Set(
+        (Block(Pos(2, 1), Pos(3, 1)), List(Down, Left, Up))
+      ).toStream)
     }
   }
 
