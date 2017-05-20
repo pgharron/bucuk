@@ -29,15 +29,13 @@ trait Solver extends GameDef {
     * that are inside the terrain.
     */
   def neighborsWithHistory(b: Block, history: List[Move]): Stream[(Block, List[Move])] = {
-    val g: Stream[(Block, List[Move])] = {
+    {
       for {
         m <- b.legalNeighbors
       } yield {
         (m._1, m._2 :: history)
       }
     }.toStream
-
-    g
   }
 
   /**
@@ -51,11 +49,12 @@ trait Solver extends GameDef {
       Stream.empty
     else {
       for {
-        ns <- neighbors
-        if !(explored contains ns._1)
-      } yield ns
+        (b, ms) <- neighbors
+        if !(explored contains b)
+      } yield (b, ms)
     }
   }
+
   /**
     * The function `from` returns the stream of all possible paths
     * that can be followed, starting at the `head` of the `initial`
@@ -85,8 +84,9 @@ trait Solver extends GameDef {
     if (initial.isEmpty) Stream.empty
     else {
       val more = for {
-        nu <- newNeighborsOnly(initial, explored)
-        next <- neighborsWithHistory(nu._1, nu._2)
+        (b, ms) <- initial
+        next <- neighborsWithHistory(b, ms)
+        //        nu <- newNeighborsOnly(, explored)
         if !(explored contains next._1)
       } yield next
 
@@ -98,12 +98,7 @@ trait Solver extends GameDef {
     * The stream of all paths that begin at the starting block.
     */
   lazy val pathsFromStart: Stream[(Block, List[Move])] = {
-    for {
-      s <- from(Stream((Block(startPos, startPos), Nil)), Set.empty)
-      y <- from(Stream((s._1, Nil)), Set.empty)
-    } yield {
-//      Stream(s) append Stream(y)
-    }
+    from(Stream((Block(startPos, startPos), Nil)), Set.empty)
   }
 
   /**
@@ -111,12 +106,11 @@ trait Solver extends GameDef {
     * with the history how it was reached.
     */
   lazy val pathsToGoal: Stream[(Block, List[Move])] = {
-    Stream.empty
-//    for {
-//      h <- pathsFromStart
-//      p <- from(h, Nil)
-//      if done(h._1)
-//    } yield h
+    for {
+      h <- pathsFromStart
+      b = h._1
+      if done(b)
+    } yield h
   }
 
   /**
@@ -127,5 +121,8 @@ trait Solver extends GameDef {
     * the first move that the player should perform from the starting
     * position.
     */
-  lazy val solution: List[Move] = ???
+  lazy val solution: List[Move] = {
+    if (pathsToGoal.isEmpty) Nil
+    else pathsToGoal.head._2.reverse
+  }
 }

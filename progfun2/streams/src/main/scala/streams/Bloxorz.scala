@@ -14,9 +14,6 @@ object Bloxorz extends App {
     val goal = Pos(5,8)
   }
 
-  println(InfiniteLevel.pathsFromStart.take(4).toList)
-  println(InfiniteLevel.pathsToGoal.take(5).toList)
-
   /**
    * A simple level constructed using the StringParserTerrain
    */
@@ -30,10 +27,8 @@ object Bloxorz extends App {
         |--oo--
         |------""".stripMargin
   }
-  println(Level0.pathsFromStart.take(2).toList)
-  println(Level0.pathsToGoal.take(2).toList)
 
-//  println(Level0.solution)
+  println(Level0.solution)
 
   /**
    * Level 1 of the official Bloxorz game
@@ -48,7 +43,5 @@ object Bloxorz extends App {
         |------ooo-""".stripMargin
   }
 
-  println(Level1.pathsFromStart.take(10).toList)
-  println(Level1.pathsToGoal.take(5).toList)
-//  println(Level1.solution)
+  println(Level1.solution)
 }
